@@ -3,11 +3,13 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 )
 
-// dummy comment
+// Entry asdfas
 type Entry struct {
+	Date     string `json:"date"`
 	Category string `json:"category"`
 	Content  string `json:"content"`
 }
@@ -40,5 +42,18 @@ func journalPost(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+
+	// start by writing the entries to a file.
 	fmt.Fprintf(w, "Entry: %+v", e)
+	jsonFile, err := json.MarshalIndent(e, "", "")
+
+	if err != nil {
+		fmt.Println("Problem parsing json: ", err)
+	}
+
+	err = ioutil.WriteFile("file.json", jsonFile, 0644)
+
+	if err != nil {
+		panic(err)
+	}
 }
