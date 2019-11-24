@@ -1,9 +1,13 @@
 package main_test
 
-import "testing"
+import (
+	"testing"
+
+	"../main"
+)
 
 func TestComputePreviousSaturdayDate(t *testing.T) {
-	outputDay, outputMonth := ComputePreviousSaturdayDate("Tuesday", 26, "November", 2019)
+	outputDay, outputMonth := main.ComputePreviousSaturdayDate("Tuesday", 26, "November", 2019)
 
 	if outputDay != 24 {
 		t.Errorf("Day was incorrect; got %d, want: %d", outputMonth, 23)

@@ -135,8 +135,6 @@ func doesEntryExist(w http.ResponseWriter, r *http.Request) {
 	outputDay, outputMonth := ComputePreviousSaturdayDate(weekday, day, monthName, year)
 
 	fmt.Println(outputDay, outputMonth)
-	// if I know the day of the week and the date, I can
-	// subtract the date from the number above to find what the date of the Saturday was.
 }
 
 func ComputePreviousSaturdayDate(weekday string, day int, monthName string, year string) (int, string) {
@@ -195,17 +193,18 @@ func ComputePreviousSaturdayDate(weekday string, day int, monthName string, year
 		"December":  12,
 	}
 
-	fmt.Println(weekday, monthName, year)
-	saturdayDateDiff := day - dayWeekDiffValues[weekday]
+	fmt.Println("input parameters are", weekday, monthName, year)
+	saturdayDate := day - dayWeekDiffValues[weekday]
 
 	var outputDay int
 	var outputMonth string
-	if saturdayDateDiff < 0 {
+	if saturdayDate < 0 {
 		outputMonth := numberToMonth[monthToNumber[monthName]-1]
 		outputMonthDays := daysInMonth[outputMonth]
-		outputDay = outputMonthDays - saturdayDateDiff
+		outputDay = outputMonthDays - saturdayDate
 	} else {
-		outputDay = day - saturdayDateDiff
+		fmt.Println("day is: ", day, " diff is: ", saturdayDate)
+		outputDay = saturdayDate
 		outputMonth = monthName
 	}
 
