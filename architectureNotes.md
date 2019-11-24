@@ -24,4 +24,5 @@ At this time it makes sense to make this a local-only application. This will get
 
 The backend will, at a minimum, receive JSON, write it to the filesystem, and provide API routes to read and return certain components of this writing. Care should be paid to make it possible for this app to be moved to some external hosting provider and allow for multi-tenancy, but the first draft of this application will assume that this app will be run locally for one user. Multiple users will likely require a database, but a single user model can exist simply on the filesystem.
 
-The backend will be in typescript.
+
+When the user initializes the app, I want to immediately run a function that checks to see whether there is already a file that has started for the week.

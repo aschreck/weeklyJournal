@@ -203,7 +203,6 @@ func ComputePreviousSaturdayDate(weekday string, day int, monthName string, year
 		outputMonthDays := daysInMonth[outputMonth]
 		outputDay = outputMonthDays - saturdayDate
 	} else {
-		fmt.Println("day is: ", day, " diff is: ", saturdayDate)
 		outputDay = saturdayDate
 		outputMonth = monthName
 	}
