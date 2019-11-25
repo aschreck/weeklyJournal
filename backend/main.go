@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"strconv"
+	"os"
 	"time"
 )
 
@@ -134,16 +134,23 @@ func doesEntryExist(w http.ResponseWriter, r *http.Request) {
 	year := date.Year()
 	outputDay, outputMonth := ComputePreviousSaturdayDate(weekday, day, monthName, year)
 	fmt.Println(outputDay, outputMonth)
-	// buildFileName(year, outputMonth, outputDay)
+	fileName := BuildFileName(year, outputMonth, outputDay)
+
+	// check to see if this filename is present.
+	fileNameWithPath := "entries/" + fileName
+	fmt.Println(fileNameWithPath)
+	_, err := os.Stat(fileNameWithPath)
+	if os.IsNotExist(err) {
+		http.Error(w, "File does not exist", 404)
+	}
+	w.WriteHeader(204)
 }
 
-func buildFileName(year int, monthName string, date int) string {
-	dateStr := strconv.Itoa(date)
-	yearStr := strconv.Itoa(year)
-
-	return fmt.Sprintf("%s-%s-%s.json", yearStr, monthName, dateStr)
+func BuildFileName(year int, monthNum int, dayNum int) string {
+	return fmt.Sprintf("%d-%d-%d.json", year, monthNum, dayNum)
 }
 
+// TODO: Look for ways to refactor this
 func ComputePreviousSaturdayDate(weekday string, day int, monthName string, year int) (int, int) {
 	dayWeekDiffValues := map[string]int{
 		"Saturday":  0,

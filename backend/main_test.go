@@ -29,11 +29,15 @@ func TestComputePreviousSaturdayDate(t *testing.T) {
 	}
 }
 
-// func TestBuildFileName(t *testing.T) {
-// 	year := 2019
-// 	monthName := "November"
-// 	date = 20
+func TestBuildFileName(t *testing.T) {
+	year := 2019
+	monthName := 11
+	dayNum := 20
 
-// 	want := "2019-"
+	want := "2019-11-20"
+	output := BuildFileName(year, monthName, dayNum)
 
-// }
+	if output != want {
+		t.Errorf("Result was incorrect; got %s, want: %s", output, want)
+	}
+}
