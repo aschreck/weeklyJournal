@@ -194,17 +194,23 @@ func ComputePreviousSaturdayDate(weekday string, day int, monthName string, year
 	}
 
 	fmt.Println("input parameters are", weekday, monthName, year)
-	saturdayDate := day - dayWeekDiffValues[weekday]
+	distanceFromSaturday := dayWeekDiffValues[weekday]
+	diff := day - distanceFromSaturday
 
 	var outputDay int
 	var outputMonth string
-	if saturdayDate < 0 {
-		outputMonth := numberToMonth[monthToNumber[monthName]-1]
+	if diff < 0 {
+		newMonthNumber := monthToNumber[monthName] - 1
+		outputMonth = numberToMonth[newMonthNumber]
 		outputMonthDays := daysInMonth[outputMonth]
-		outputDay = outputMonthDays - saturdayDate
+		outputDay = outputMonthDays - (diff * -1)
+		fmt.Println("output  months is: ", outputMonth)
+
 	} else {
-		outputDay = saturdayDate
+		outputDay = diff
 		outputMonth = monthName
+		fmt.Println("output  months is: ", outputMonth)
+
 	}
 
 	return outputDay, outputMonth
