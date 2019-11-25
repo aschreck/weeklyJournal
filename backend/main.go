@@ -131,13 +131,20 @@ func doesEntryExist(w http.ResponseWriter, r *http.Request) {
 	weekday := date.Weekday().String()
 	day := date.Day()
 	monthName := date.Month().String()
-	year := strconv.Itoa(date.Year())
+	year := date.Year()
 	outputDay, outputMonth := ComputePreviousSaturdayDate(weekday, day, monthName, year)
-
 	fmt.Println(outputDay, outputMonth)
+	// buildFileName(year, outputMonth, outputDay)
 }
 
-func ComputePreviousSaturdayDate(weekday string, day int, monthName string, year string) (int, string) {
+func buildFileName(year int, monthName string, date int) string {
+	dateStr := strconv.Itoa(date)
+	yearStr := strconv.Itoa(year)
+
+	return fmt.Sprintf("%s-%s-%s.json", yearStr, monthName, dateStr)
+}
+
+func ComputePreviousSaturdayDate(weekday string, day int, monthName string, year int) (int, int) {
 	dayWeekDiffValues := map[string]int{
 		"Saturday":  0,
 		"Sunday":    1,
@@ -198,20 +205,16 @@ func ComputePreviousSaturdayDate(weekday string, day int, monthName string, year
 	diff := day - distanceFromSaturday
 
 	var outputDay int
-	var outputMonth string
+	var outputMonthNumber int
 	if diff < 0 {
-		newMonthNumber := monthToNumber[monthName] - 1
-		outputMonth = numberToMonth[newMonthNumber]
+		// Calculate the date of the previous Saturday when that Saturday occured in the previous month.
+		outputMonthNumber = monthToNumber[monthName] - 1
+		outputMonth := numberToMonth[outputMonthNumber]
 		outputMonthDays := daysInMonth[outputMonth]
 		outputDay = outputMonthDays - (diff * -1)
-		fmt.Println("output  months is: ", outputMonth)
-
 	} else {
 		outputDay = diff
-		outputMonth = monthName
-		fmt.Println("output  months is: ", outputMonth)
-
+		outputMonthNumber = monthToNumber[monthName]
 	}
-
-	return outputDay, outputMonth
+	return outputDay, outputMonthNumber
 }

@@ -5,26 +5,35 @@ import (
 )
 
 func TestComputePreviousSaturdayDate(t *testing.T) {
-	outputDay1, outputMonth1 := ComputePreviousSaturdayDate("Tuesday", 26, "November", "2019")
-	want := 23
-
-	if outputDay1 != want {
-		t.Errorf("Day was incorrect; got %d, want: %d", outputDay1, want)
+	outputDay, outputMonth := ComputePreviousSaturdayDate("Tuesday", 26, "November", 2019)
+	wantDay := 23
+	wantMonth := 11
+	if outputDay != wantDay {
+		t.Errorf("Day was incorrect; got %d, want: %d", outputDay, wantDay)
 	}
 
-	if outputMonth1 != "November" {
-		t.Errorf("Day was incorrect; got %s, want: %s", outputMonth1, "November")
+	if outputMonth != wantMonth {
+		t.Errorf("Day was incorrect; got %d, want: %d", outputMonth, wantMonth)
 	}
 
-	outputDay2, outputMonth2 := ComputePreviousSaturdayDate("Friday", 1, "November", "2019")
+	outputDay, outputMonth = ComputePreviousSaturdayDate("Friday", 1, "November", 2019)
 
-	want = 26
-	if outputDay2 != want {
-		t.Errorf("Day was incorrect; got %d, want: %d", outputDay2, want)
+	wantDay = 26
+	wantMonth = 10
+	if outputDay != wantDay {
+		t.Errorf("Day was incorrect; got %d, want: %d", outputDay, wantDay)
 	}
 
-	if outputMonth2 != "October" {
-		t.Errorf("Month was incorrect; got %s, want: %s", outputMonth2, "October")
+	if outputMonth != wantMonth {
+		t.Errorf("Month was incorrect; got %d, want: %d", outputMonth, wantMonth)
 	}
-
 }
+
+// func TestBuildFileName(t *testing.T) {
+// 	year := 2019
+// 	monthName := "November"
+// 	date = 20
+
+// 	want := "2019-"
+
+// }
