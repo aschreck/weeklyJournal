@@ -200,7 +200,6 @@ func ComputePreviousSaturdayDate(weekday string, day int, monthName string, year
 		"December":  12,
 	}
 
-	fmt.Println("input parameters are", weekday, monthName, year)
 	distanceFromSaturday := dayWeekDiffValues[weekday]
 	diff := day - distanceFromSaturday
 
