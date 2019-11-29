@@ -1,0 +1,22 @@
+{
+  "categories": {
+    "review": {
+      "content": "I did pretty well on last week's goals"
+    },
+    "gratitude": {
+      "content": "I had a really fun time at my friend's party"
+    },
+    "goals": {
+      "content": "I want to sleep exactly 7 hours a night."
+    },
+    "projects": {
+      "content": "Build a cool journaling app"
+    },
+    "health": {
+      "contents": ""
+    },
+    "thoughts": {
+      "contents": ""
+    }
+  }
+}

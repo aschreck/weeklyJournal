@@ -9,7 +9,6 @@ import (
 	"time"
 )
 
-// Entry asdfas
 type EntryElement struct {
 	Date     string `json:"date"`
 	Category string `json:"category"`
@@ -39,19 +38,33 @@ type Entry struct {
 var apiPath = "/api/v1"
 
 func main() {
-	http.HandleFunc(apiPath+"/doesEntryExist", doesEntryExist)
+	http.HandleFunc(apiPath+"/getJournal", GetJournalIfExists)
 	http.HandleFunc(apiPath+"/journalEntry", journalPost)
 	http.HandleFunc(apiPath+"/readEntry", readEntry)
 
 	http.ListenAndServe(":8080", nil)
 }
 
-func readEntry(w http.ResponseWriter, r *http.Request) {
-	// this function needs to do one of two things:
-	// 1) if a query parameter is provided, it needs to send back only the section of JSON associated with that category
-	// 2) If there is no query parameter specified, return the whole file.
+func GetJournalIfExists(w http.ResponseWriter, r *http.Request) {
+	// check and see if there is a journal entry for the previous saturday.
+	filePath, isPresent := doesEntryExist()
 
-	// Brainstorm: one solution here might be to automatically create each new entry with all of the relevant fields and just set them to empty strings. that would homogenize my JSON format and make sure I don't need to deal with the problem of things not existing.
+	if isPresent == false {
+		http.Error(w, "Journal entry not found for this week", 404)
+	}
+
+	// Otherwise open the file and return it as json.
+	data, err := ioutil.ReadFile(filePath)
+
+	if err != nil {
+		http.Error(w, "Something went wrong", 500)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(data)
+}
+
+func readEntry(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != apiPath+"/readEntry" {
 		http.Error(w, "404 not found", 404)
 		return
@@ -125,7 +138,7 @@ func startNewWeek(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func doesEntryExist(w http.ResponseWriter, r *http.Request) {
+func doesEntryExist() (string, bool) {
 	//  This function is simply going to check whether we have an entry for this week.
 	date := time.Now()
 	weekday := date.Weekday().String()
@@ -141,9 +154,9 @@ func doesEntryExist(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(fileNameWithPath)
 	_, err := os.Stat(fileNameWithPath)
 	if os.IsNotExist(err) {
-		http.Error(w, "File does not exist", 404)
+		return "", false
 	}
-	w.WriteHeader(204)
+	return fileNameWithPath, true
 }
 
 func BuildFileName(year int, monthNum int, dayNum int) string {
@@ -151,6 +164,8 @@ func BuildFileName(year int, monthNum int, dayNum int) string {
 }
 
 // TODO: Look for ways to refactor this
+
+// ComputePreviousSaturdayDate returns the day and month number of the most recent previous saturday.
 func ComputePreviousSaturdayDate(weekday string, day int, monthName string, year int) (int, int) {
 	dayWeekDiffValues := map[string]int{
 		"Saturday":  0,
