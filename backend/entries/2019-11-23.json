@@ -1,5 +1,6 @@
 {
-  "categories": {
+  "weekDate": "2019-11-23",
+  "weekly": {
     "review": {
       "content": "I did pretty well on last week's goals"
     },
@@ -10,13 +11,71 @@
       "content": "I want to sleep exactly 7 hours a night."
     },
     "projects": {
-      "content": "Build a cool journaling app"
+      "content": "Build a cool journaling app and made it overwrite files"
     },
     "health": {
       "contents": ""
     },
     "thoughts": {
       "contents": ""
+    },
+    "daily": {
+      "monday": {
+        "setGoals": {
+          "content": ""
+        },
+        "reviewGoals": {
+          "content": ""
+        }
+      },
+      "tuesday": {
+        "setGoals": {
+          "content": ""
+        },
+        "reviewGoals": {
+          "content": ""
+        }
+      },
+      "wednesday": {
+        "setGoals": {
+          "content": ""
+        },
+        "reviewGoals": {
+          "content": ""
+        }
+      },
+      "thursday": {
+        "setGoals": {
+          "content": ""
+        },
+        "reviewGoals": {
+          "content": ""
+        }
+      },
+      "friday": {
+        "setGoals": {
+          "content": ""
+        },
+        "reviewGoals": {
+          "content": ""
+        }
+      },
+      "saturday": {
+        "setGoals": {
+          "content": ""
+        },
+        "reviewGoals": {
+          "content": ""
+        }
+      },
+      "sunday": {
+        "setGoals": {
+          "content": ""
+        },
+        "reviewGoals": {
+          "content": ""
+        }
+      }
     }
   }
 }

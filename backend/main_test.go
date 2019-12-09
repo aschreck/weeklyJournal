@@ -34,7 +34,7 @@ func TestBuildFileName(t *testing.T) {
 	monthName := 11
 	dayNum := 20
 
-	want := "2019-11-20"
+	want := "2019-11-20.json"
 	output := BuildFileName(year, monthName, dayNum)
 
 	if output != want {

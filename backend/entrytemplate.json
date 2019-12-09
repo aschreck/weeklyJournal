@@ -1,5 +1,6 @@
 {
-  "categories": {
+  "weekDate": "",
+  "weekly": {
     "review": {
       "content": ""
     },
@@ -17,6 +18,64 @@
     },
     "thoughts": {
       "contents": ""
+    },
+    "daily": {
+      "monday":{
+        "setGoals": {
+          "content": ""
+        },
+        "reviewGoals": {
+          "content": ""
+        }
+      },
+      "tuesday":{
+        "setGoals": {
+          "content": ""
+        },
+        "reviewGoals": {
+          "content": ""
+        }
+      },
+      "wednesday":{
+        "setGoals": {
+          "content": ""
+        },
+        "reviewGoals": {
+          "content": ""
+        }
+      },
+      "thursday":{
+        "setGoals": {
+          "content": ""
+        },
+        "reviewGoals": {
+          "content": ""
+        }
+      },
+      "friday":{
+        "setGoals": {
+          "content": ""
+        },
+        "reviewGoals": {
+          "content": ""
+        }
+      },
+      "saturday":{
+        "setGoals": {
+          "content": ""
+        },
+        "reviewGoals": {
+          "content": ""
+        }
+      },
+      "sunday":{
+        "setGoals": {
+          "content": ""
+        },
+        "reviewGoals": {
+          "content": ""
+        }
+      }
     }
   }
 }

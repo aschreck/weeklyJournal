@@ -9,14 +9,10 @@ import (
 	"time"
 )
 
-type EntryElement struct {
-	Date     string `json:"date"`
-	Category string `json:"category"`
-	Content  string `json:"content"`
-}
-
+// Entry is defined as a the JSON for the whole week.
 type Entry struct {
-	Categories struct {
+	WeekDate string `json:"weekDate"`
+	Weekly   struct {
 		Review struct {
 			Content string `json:"content"`
 		} `json:"review"`
@@ -29,17 +25,78 @@ type Entry struct {
 		Projects struct {
 			Content string `json:"content"`
 		} `json:"projects"`
+		Health struct {
+			Contents string `json:"contents"`
+		} `json:"health"`
 		Thoughts struct {
 			Contents string `json:"contents"`
 		} `json:"thoughts"`
-	} `json:"categories"`
+		Daily struct {
+			Monday struct {
+				SetGoals struct {
+					Content string `json:"content"`
+				} `json:"setGoals"`
+				ReviewGoals struct {
+					Content string `json:"content"`
+				} `json:"reviewGoals"`
+			} `json:"monday"`
+			Tuesday struct {
+				SetGoals struct {
+					Content string `json:"content"`
+				} `json:"setGoals"`
+				ReviewGoals struct {
+					Content string `json:"content"`
+				} `json:"reviewGoals"`
+			} `json:"tuesday"`
+			Wednesday struct {
+				SetGoals struct {
+					Content string `json:"content"`
+				} `json:"setGoals"`
+				ReviewGoals struct {
+					Content string `json:"content"`
+				} `json:"reviewGoals"`
+			} `json:"wednesday"`
+			Thursday struct {
+				SetGoals struct {
+					Content string `json:"content"`
+				} `json:"setGoals"`
+				ReviewGoals struct {
+					Content string `json:"content"`
+				} `json:"reviewGoals"`
+			} `json:"thursday"`
+			Friday struct {
+				SetGoals struct {
+					Content string `json:"content"`
+				} `json:"setGoals"`
+				ReviewGoals struct {
+					Content string `json:"content"`
+				} `json:"reviewGoals"`
+			} `json:"friday"`
+			Saturday struct {
+				SetGoals struct {
+					Content string `json:"content"`
+				} `json:"setGoals"`
+				ReviewGoals struct {
+					Content string `json:"content"`
+				} `json:"reviewGoals"`
+			} `json:"saturday"`
+			Sunday struct {
+				SetGoals struct {
+					Content string `json:"content"`
+				} `json:"setGoals"`
+				ReviewGoals struct {
+					Content string `json:"content"`
+				} `json:"reviewGoals"`
+			} `json:"sunday"`
+		} `json:"daily"`
+	} `json:"weekly"`
 }
 
 var apiPath = "/api/v1"
 
 func main() {
 	http.HandleFunc(apiPath+"/getJournal", GetJournalIfExists)
-	http.HandleFunc(apiPath+"/journalEntry", journalPost)
+	http.HandleFunc(apiPath+"/updateJournal", updateJournal)
 	http.HandleFunc(apiPath+"/readEntry", readEntry)
 
 	http.ListenAndServe(":8080", nil)
@@ -51,6 +108,7 @@ func GetJournalIfExists(w http.ResponseWriter, r *http.Request) {
 
 	if isPresent == false {
 		http.Error(w, "Journal entry not found for this week", 404)
+		return
 	}
 
 	// Otherwise open the file and return it as json.
@@ -96,8 +154,9 @@ func readEntry(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(jsonString)
 }
 
-func journalPost(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path != apiPath+"/journalEntry" {
+// this function will simply write the JSON file it receives from the frontend over whateve it currently has in its own stores.
+func updateJournal(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != apiPath+"/updateJournal" {
 		http.Error(w, "404 not found", 404)
 		return
 	}
@@ -108,7 +167,7 @@ func journalPost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// fmt.Println(r.URL.Query())
-	var e EntryElement
+	var e Entry
 	// assume that the incoming request has a JSON body
 	err := json.NewDecoder(r.Body).Decode(&e)
 
@@ -120,14 +179,14 @@ func journalPost(w http.ResponseWriter, r *http.Request) {
 	// check for an existing file with this date. We're going to load the file into memory and edit it as such
 
 	// start by writing the entries to a file.
+	fmt.Printf("%v+", e)
 	fmt.Fprintf(w, "Entry: %+v", e)
-	jsonFile, err := json.MarshalIndent(e, "", "")
+	jsonFile, err := json.MarshalIndent(e, "", "  ")
 
 	if err != nil {
 		fmt.Println("Problem parsing json: ", err)
 	}
-
-	err = ioutil.WriteFile("file.json", jsonFile, 0644)
+	err = ioutil.WriteFile("./entries/"+e.WeekDate+".json", jsonFile, 0644)
 
 	if err != nil {
 		panic(err)
