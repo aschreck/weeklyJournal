@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -98,6 +99,7 @@ func main() {
 	http.HandleFunc(apiPath+"/getJournal", GetJournalIfExists)
 	http.HandleFunc(apiPath+"/updateJournal", updateJournal)
 	http.HandleFunc(apiPath+"/readEntry", readEntry)
+	http.HandleFunc(apiPath+"/startNewWeek", startNewWeek)
 
 	http.ListenAndServe(":8080", nil)
 }
@@ -194,11 +196,46 @@ func updateJournal(w http.ResponseWriter, r *http.Request) {
 }
 
 func startNewWeek(w http.ResponseWriter, r *http.Request) {
+	// make sure that a week does not already exist
+	_, isPresent := doesEntryExist()
 
+	if isPresent == true {
+		http.Error(w, "Entry already exists", 400)
+	}
+	// compute the name of the file.
+	fileToBeCreated := computeJournalEntryFileName()
+	// copy the template into the the entries file.
+	copy("./entryTemplate.json", fileToBeCreated)
+	w.WriteHeader(204)
 }
 
-func doesEntryExist() (string, bool) {
-	//  This function is simply going to check whether we have an entry for this week.
+func copy(srcFileName, destinationFileName string) (int64, error) {
+	sourceFileStat, err := os.Stat(srcFileName)
+
+	if err != nil {
+		return 0, err
+	}
+
+	if !sourceFileStat.Mode().IsRegular() {
+		return 0, fmt.Errorf("%s is not a regular file", srcFileName)
+	}
+
+	source, err := os.Open(srcFileName)
+	if err != nil {
+		return 0, err
+	}
+	defer source.Close()
+
+	destinationFile, err := os.Create(destinationFileName)
+	if err != nil {
+		return 0, err
+	}
+	defer destinationFile.Close()
+	nBytes, err := io.Copy(destinationFile, source)
+	return nBytes, err
+}
+
+func computeJournalEntryFileName() string {
 	date := time.Now()
 	weekday := date.Weekday().String()
 	day := date.Day()
@@ -210,6 +247,11 @@ func doesEntryExist() (string, bool) {
 
 	// check to see if this filename is present.
 	fileNameWithPath := "entries/" + fileName
+	return fileNameWithPath
+}
+
+func doesEntryExist() (string, bool) {
+	fileNameWithPath := computeJournalEntryFileName()
 	fmt.Println(fileNameWithPath)
 	_, err := os.Stat(fileNameWithPath)
 	if os.IsNotExist(err) {
