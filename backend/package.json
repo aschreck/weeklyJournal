@@ -1,0 +1,29 @@
+{
+  "name": "weekly-journal-backend",
+  "version": "1.0.0",
+  "description": "a backend for the weekly journal application",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon --watch 'src/**/*' -e ts,tsx --exec ts-node ./src/server.ts",
+    "test": "mocha"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "koa": "^2.11.0",
+    "koa-bodyparser": "^4.2.1",
+    "koa-json": "^2.0.2",
+    "koa-logger": "^3.2.1",
+    "koa-router": "^7.4.0",
+    "request": "^2.88.0"
+  },
+  "devDependencies": {
+    "@types/koa": "^2.11.0",
+    "@types/koa-router": "^7.0.42",
+    "@types/node": "^13.1.1",
+    "chai": "^4.2.0",
+    "mocha": "^6.2.2",
+    "ts-node": "^8.5.4",
+    "typescript": "^3.7.4"
+  }
+}
