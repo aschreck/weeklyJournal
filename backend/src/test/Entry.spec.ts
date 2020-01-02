@@ -18,36 +18,42 @@ describe('#getEntryIfExtant', () => {
 
 describe('#computePreviousSaturday', () => {
   it('should work with a saturday in the same month', () => {
-    const weekDay = 3;
-    const monthDay = 25;
-    const month = 12
-    const year  = 2019
+    const date = {
+      weekDay: 3,
+      monthDay: 25,
+      month: 12,
+      year: 2019,
+    }
 
-    const result = Entry.computePreviousSaturday(weekDay, monthDay, month, year);
+    const result = Entry.computePreviousSaturday(date);
 
     expect(result[0]).to.equal(21);
     expect(result[1]).to.equal(12);
   })
 
   it('should work when the saturday is the last day in the previous month', () => {
-    const weekDay = 2;
-    const monthDay = 3;
-    const month = 12
-    const year  = 2019
+    const date = {
+      weekDay: 2,
+      monthDay: 3,
+      month: 12,
+      year: 2019,
+    }
 
-    const result = Entry.computePreviousSaturday(weekDay, monthDay, month, year);
+    const result = Entry.computePreviousSaturday(date);
 
     expect(result[0]).to.equal(30);
     expect(result[1]).to.equal(11);
   })
 
   it('should work with a saturday in the previous month', () => {
-    const weekDay = 5;
-    const monthDay = 4;
-    const month = 10;
-    const year  = 2019;
+    const date = {
+      weekDay: 5,
+      monthDay: 4,
+      month: 10,
+      year: 2019,
+    }
 
-    const result = Entry.computePreviousSaturday(weekDay, monthDay, month, year);
+    const result = Entry.computePreviousSaturday(date);
 
     expect(result[0]).to.equal(28);
     expect(result[1]).to.equal(9);

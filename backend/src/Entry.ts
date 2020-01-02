@@ -1,3 +1,5 @@
+import { dateObj } from "./interfaces";
+
 const fs =  require('fs');
 
 const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -16,9 +18,13 @@ export const getEntryIfExtant = (filePath: string) => {
 }
 
 // take in an input date and calculate the date of the saturday you should be looking for.
-export const computePreviousSaturday = (weekDay: number, monthDay: number, month: number, year: number): [number, number] => {
+export const computePreviousSaturday = (date: dateObj): [number, number] => {
   // the purpose of this function is to compute the date of the previous saturday.
-  // So to calculate this, I need the current date
+  const weekDay = date.weekDay;
+  const monthDay = date.monthDay;
+  const month = date.month;
+  const year = date.year;
+
   const daysInMonth: any = {
 		1: 31,
 		2: 28,

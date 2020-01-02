@@ -1,21 +1,25 @@
 // const Koa = require('koa');
 // const Router = require('koa-router');
-// const Entry = require('./Entry')
+import * as Entry from './Entry'
 import * as Koa from 'koa';
 import * as Router from 'koa-router';
+import { dateObj } from './interfaces';
 
 const app = new Koa()
 const router = new Router
 const journalPath = "./entries"
 
 router.get('/journal',(ctx, next) => {
-  // need to feed it the appropriate date.
+  const currentDate: dateObj = getDate()
 
-  console.log('this is working');
-  // computePreviousSaturday()
+  // This function tells me what filename I should be looking for
+  Entry.computePreviousSaturday(currentDate)
 
 })
 
+const getDate = (): dateObj => {
+
+}
 app.use(router.routes());
 app.use(router.allowedMethods());
 
