@@ -10,16 +10,24 @@ const router = new Router
 const journalPath = "./entries"
 
 router.get('/journal',(ctx, next) => {
-  const currentDate: dateObj = getDate()
-
+  const currentDate: dateObj = getDate();
   // This function tells me what filename I should be looking for
-  Entry.computePreviousSaturday(currentDate)
+  const previousSaturdayDate = Entry.computePreviousSaturday(currentDate)
 
 })
 
 const getDate = (): dateObj => {
+  const d = new Date()
+  const date: dateObj = {
+    weekDay: d.getDay(),
+    day: d.getDate(),
+    month: d.getMonth(),
+    year: d.getFullYear(),
+  }
 
+  return date;
 }
+
 app.use(router.routes());
 app.use(router.allowedMethods());
 

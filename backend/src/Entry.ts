@@ -6,7 +6,6 @@ const months = ["January", "February", "March", "April", "May", "June", "July", 
 
 // this function assumes that it will be receiving a date adjusted for
 export const getEntryIfExtant = (filePath: string) => {
-
   try {
     return JSON.parse(fs.readFileSync(filePath, "utf8"));
   }
@@ -18,10 +17,10 @@ export const getEntryIfExtant = (filePath: string) => {
 }
 
 // take in an input date and calculate the date of the saturday you should be looking for.
-export const computePreviousSaturday = (date: dateObj): [number, number] => {
+export const computePreviousSaturday = (date: dateObj): dateObj => {
   // the purpose of this function is to compute the date of the previous saturday.
   const weekDay = date.weekDay;
-  const monthDay = date.monthDay;
+  const monthDay = date.day;
   const month = date.month;
   const year = date.year;
 
@@ -55,7 +54,13 @@ export const computePreviousSaturday = (date: dateObj): [number, number] => {
     outputDay = diff;
     outputMonth = month
   }
-  return [outputDay, outputMonth]
+
+  const output = {
+    day: outputDay,
+    month: outputMonth,
+    year: year,
+  }
+  return output;
 }
 
 export const convertDayInteger = (javaScriptDay: number): number => {
@@ -65,6 +70,11 @@ export const convertDayInteger = (javaScriptDay: number): number => {
     return javaScriptDay + 1;
   }
 }
+
+export const buildEntryFilename = (date: dateObj): string => {
+  return `${date.year}-${date.month}-${date.day}.json`
+}
+
 
 // exports.getEntryIfExtant = getEntryIfExtant
 // exports.computePreviousSaturday = computePreviousSaturday

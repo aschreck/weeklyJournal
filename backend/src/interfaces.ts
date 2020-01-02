@@ -1,6 +1,6 @@
 export interface dateObj {
-  weekDay: number,
-  monthDay: number,
+  weekDay?: number,
+  day: number,
   month: number
   year: number
 }

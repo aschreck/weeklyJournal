@@ -20,43 +20,43 @@ describe('#computePreviousSaturday', () => {
   it('should work with a saturday in the same month', () => {
     const date = {
       weekDay: 3,
-      monthDay: 25,
+      day: 25,
       month: 12,
       year: 2019,
     }
 
     const result = Entry.computePreviousSaturday(date);
 
-    expect(result[0]).to.equal(21);
-    expect(result[1]).to.equal(12);
+    expect(result.day).to.equal(21);
+    expect(result.month).to.equal(12);
   })
 
   it('should work when the saturday is the last day in the previous month', () => {
     const date = {
       weekDay: 2,
-      monthDay: 3,
+      day: 3,
       month: 12,
       year: 2019,
     }
 
     const result = Entry.computePreviousSaturday(date);
 
-    expect(result[0]).to.equal(30);
-    expect(result[1]).to.equal(11);
+    expect(result.day).to.equal(30);
+    expect(result.month).to.equal(11);
   })
 
   it('should work with a saturday in the previous month', () => {
     const date = {
       weekDay: 5,
-      monthDay: 4,
+      day: 4,
       month: 10,
       year: 2019,
     }
 
     const result = Entry.computePreviousSaturday(date);
 
-    expect(result[0]).to.equal(28);
-    expect(result[1]).to.equal(9);
+    expect(result.day).to.equal(28);
+    expect(result.month).to.equal(9);
   })
 })
 
