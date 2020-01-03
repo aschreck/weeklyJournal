@@ -58,6 +58,21 @@ describe('#computePreviousSaturday', () => {
     expect(result.day).to.equal(28);
     expect(result.month).to.equal(9);
   })
+
+  it.only('should work when the saturday is in the previous year', () => {
+    const date = {
+      weekDay: 5,
+      day: 3,
+      month: 1,
+      year: 2020,
+    }
+
+    const result = Entry.computePreviousSaturday(date);
+
+    expect(result.day).to.equal(28);
+    expect(result.month).to.equal(12);
+    expect(result.year).to.equal(2019);
+  })
 })
 
 describe('#convertDayInteger', () => {

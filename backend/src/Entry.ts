@@ -2,8 +2,26 @@ import { dateObj } from "./interfaces";
 
 const fs =  require('fs');
 
-const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const journalPath = "./entries"
 
+export const deliverEntryOrNull = () => {
+  const currentDate: dateObj = getDate();
+  const previousSaturdayDate = computePreviousSaturday(currentDate);
+
+  return getEntryIfExtant(journalPath + buildEntryFilename(previousSaturdayDate));
+}
+
+const getDate = (): dateObj => {
+  const d = new Date()
+  const date: dateObj = {
+    weekDay: d.getDay(),
+    day: d.getDate(),
+    month: d.getMonth(),
+    year: d.getFullYear(),
+  }
+
+  return date;
+}
 // this function assumes that it will be receiving a date adjusted for
 export const getEntryIfExtant = (filePath: string) => {
   try {
@@ -22,7 +40,7 @@ export const computePreviousSaturday = (date: dateObj): dateObj => {
   const weekDay = date.weekDay;
   const monthDay = date.day;
   const month = date.month;
-  const year = date.year;
+  let year = date.year;
 
   const daysInMonth: any = {
 		1: 31,
@@ -41,16 +59,25 @@ export const computePreviousSaturday = (date: dateObj): dateObj => {
 
   const distanceFromSaturday = convertDayInteger(weekDay);
 
+  //Thurs Jan 3rd
   const diff = monthDay - distanceFromSaturday;
   let outputDay: number;
   let outputMonth: number;
-
   if ( diff <= 0 ) {
-    outputMonth = month - 1;
-    const daysInOutputMonth = daysInMonth[outputMonth];
-    // Diff will always be negative
-    outputDay = daysInOutputMonth + diff;
+    // special case for dealing with a leap that crosses years.
+    if (month === 1) {
+      outputMonth = 12;
+      const daysInOutputMonth = daysInMonth[outputMonth];
+      outputDay = daysInOutputMonth + diff;
+      year = year - 1;
+    } else {
+      outputMonth = month - 1;
+      const daysInOutputMonth = daysInMonth[outputMonth];
+      // Diff will always be negative
+      outputDay = daysInOutputMonth + diff;
+    }
   } else {
+    console.log('inside #4');
     outputDay = diff;
     outputMonth = month
   }
@@ -64,6 +91,7 @@ export const computePreviousSaturday = (date: dateObj): dateObj => {
 }
 
 export const convertDayInteger = (javaScriptDay: number): number => {
+  console.log('Javascript day is: ', javaScriptDay);
   if (javaScriptDay === 6) {
     return 0
   } else {
