@@ -2,6 +2,7 @@ import { expect, assert } from 'chai';
 import 'mocha';
 import * as Entry from '../Entry'
 
+// NOTE: because JS indexes their days from Saturday instead of Sunday, these weekday values for tests must be input from Sunday to simulate how the date object is delivered.
 describe('#getEntryIfExtant', () => {
   it("should return journal data for a given date if it exists", () => {
     const testEntryFilename = "./src/test/2019-12-26.json"
@@ -59,7 +60,7 @@ describe('#computePreviousSaturday', () => {
     expect(result.month).to.equal(9);
   })
 
-  it.only('should work when the saturday is in the previous year', () => {
+  it('should work when the saturday is in the previous year', () => {
     const date = {
       weekDay: 5,
       day: 3,
@@ -77,10 +78,21 @@ describe('#computePreviousSaturday', () => {
 
 describe('#convertDayInteger', () => {
   it('should shift days up one', () => {
-    //I put in a Monday, which for JS is 1, but I want to be 2.
     expect(Entry.convertDayInteger(1)).to.equal(2);
   })
   it('should reset to zero index when the input is a javascript saturday', () => {
     expect(Entry.convertDayInteger(6)).to.equal(0);
+  })
+})
+
+describe('#buildEntryFilename', () => {
+  it('should properly build filenames from date objects', () => {
+    const date = {
+      weekDay: 0,
+      day: 4,
+      month: 1,
+      year: 2020,
+    }
+    expect(Entry.buildEntryFilename(date)).to.equal("2020-1-4.json");
   })
 })

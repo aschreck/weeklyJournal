@@ -8,7 +8,7 @@ const app = new Koa()
 const router = new Router
 
 router.get('/journal',(ctx, next) => {
-  return Entry.deliverEntryOrNull()
+  ctx.body = Entry.deliverEntryOrNull()
 })
 
 

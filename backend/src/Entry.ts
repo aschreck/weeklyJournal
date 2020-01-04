@@ -2,12 +2,13 @@ import { dateObj } from "./interfaces";
 
 const fs =  require('fs');
 
-const journalPath = "./entries"
+const journalPath = "./entries/"
 
 export const deliverEntryOrNull = () => {
-  const currentDate: dateObj = getDate();
+  const currentDate: dateObj = getDate()
+  console.log('date object is: ', currentDate);
   const previousSaturdayDate = computePreviousSaturday(currentDate);
-
+  console.log(previousSaturdayDate);
   return getEntryIfExtant(journalPath + buildEntryFilename(previousSaturdayDate));
 }
 
@@ -16,7 +17,7 @@ const getDate = (): dateObj => {
   const date: dateObj = {
     weekDay: d.getDay(),
     day: d.getDate(),
-    month: d.getMonth(),
+    month: d.getMonth() + 1,
     year: d.getFullYear(),
   }
 
@@ -77,7 +78,6 @@ export const computePreviousSaturday = (date: dateObj): dateObj => {
       outputDay = daysInOutputMonth + diff;
     }
   } else {
-    console.log('inside #4');
     outputDay = diff;
     outputMonth = month
   }
@@ -91,7 +91,6 @@ export const computePreviousSaturday = (date: dateObj): dateObj => {
 }
 
 export const convertDayInteger = (javaScriptDay: number): number => {
-  console.log('Javascript day is: ', javaScriptDay);
   if (javaScriptDay === 6) {
     return 0
   } else {
@@ -102,8 +101,3 @@ export const convertDayInteger = (javaScriptDay: number): number => {
 export const buildEntryFilename = (date: dateObj): string => {
   return `${date.year}-${date.month}-${date.day}.json`
 }
-
-
-// exports.getEntryIfExtant = getEntryIfExtant
-// exports.computePreviousSaturday = computePreviousSaturday
-// exports.convertDayInteger = convertDayInteger
