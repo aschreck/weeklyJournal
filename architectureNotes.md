@@ -2,17 +2,17 @@ The following is a scratchpad for brainstorming the architecture of the applicat
 
 # TODO
 
+- Make typescript refactor feature-comparable with the old Go backend.
+
+- Formalize the morning journaling routine, and use questions from the 5 minute journal.
+
 - implement functionality for starting a new journal week
 
 - allow updates to weekly categories
 
-- organize test and files into sane directories.
-
 - Set up a method of creating a CSV that will will track your numbers.
 
-
-
-
+- It currently cannot handle a jump across years.
 
 # Frontend Behavior
 

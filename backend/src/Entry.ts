@@ -50,7 +50,7 @@ const getDate = (): dateObj => {
   return date;
 }
 // this function assumes that it will be receiving a date adjusted for
-export const getEntryIfExtant = (filePath: string) => {
+export const getEntryIfExtant = (filePath: string): IJournalEntry | null => {
   try {
     return JSON.parse(fs.readFileSync(filePath, "utf8"));
   }
