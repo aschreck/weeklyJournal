@@ -1,14 +1,40 @@
-import { dateObj } from "./interfaces";
-
-const fs =  require('fs');
+import { dateObj, IJournalEntry } from "./interfaces";
+import * as fs from 'fs';
 
 const journalPath = "./entries/"
 
+export const startNewJournalWeek = () => {
+  // need to check if entry exists
+  const date = getDate()
+  let fileName = buildEntryFilename(computePreviousSaturday(date));
+  fileName = `./entries/${fileName}`;
+  const extant = doesFileExist(fileName);
+
+  if (extant) {
+    return false;
+  } else {
+    // create a new file with the appropriate name.
+    const templateJSON = JSON.stringify(fs.readFileSync("./entryTemplate.json", "utf8"), null, 2);
+    fs.writeFileSync(fileName, templateJSON);
+    return true;
+  }
+}
+
+const doesFileExist = (filePath: string) => {
+  return fs.existsSync(filePath);
+}
+
+export const writeJournalEntry = (entry: IJournalEntry) => {
+  const date = entry.weekDate;
+  const data = JSON.stringify(entry, null, 2);
+  //build the filename
+  const filename = `./entries/${date}.json`;
+  fs.writeFileSync(filename, data);
+}
+
 export const deliverEntryOrNull = () => {
   const currentDate: dateObj = getDate()
-  console.log('date object is: ', currentDate);
   const previousSaturdayDate = computePreviousSaturday(currentDate);
-  console.log(previousSaturdayDate);
   return getEntryIfExtant(journalPath + buildEntryFilename(previousSaturdayDate));
 }
 

@@ -1,0 +1,116 @@
+{
+  "weekDate": "",
+  "weekly": {
+    "review": {
+      "content": ""
+    },
+    "gratitude": {
+      "content": ""
+    },
+    "goals": {
+      "content": ""
+    },
+    "projects": {
+      "content": ""
+    },
+    "health": {
+      "contents": ""
+    },
+    "thoughts": {
+      "contents": ""
+    },
+    "daily": {
+      "monday":{
+        "morning": {
+          "goals": "",
+          "gratefulFor": [],
+          "todayGreat": [],
+          "affirmations": []
+        },
+        "evening": {
+          "reviewGoals": "",
+          "amazingThings": [],
+          "better": []
+        }
+      },
+      "tuesday":{
+        "morning": {
+          "goals": "",
+          "gratefulFor": [],
+          "todayGreat": [],
+          "affirmations": []
+        },
+        "evening": {
+          "reviewGoals": "",
+          "amazingThings": [],
+          "better": []
+        }
+      },
+      "wednesday":{
+        "morning": {
+          "goals": "",
+          "gratefulFor": [],
+          "todayGreat": [],
+          "affirmations": []
+        },
+        "evening": {
+          "reviewGoals": "",
+          "amazingThings": [],
+          "better": []
+        }
+      },
+      "thursday":{
+        "morning": {
+          "goals": "",
+          "gratefulFor": [],
+          "todayGreat": [],
+          "affirmations": []
+        },
+        "evening": {
+          "reviewGoals": "",
+          "amazingThings": [],
+          "better": []
+        }
+      },
+      "friday":{
+        "morning": {
+          "goals": "",
+          "gratefulFor": [],
+          "todayGreat": [],
+          "affirmations": []
+        },
+        "evening": {
+          "reviewGoals": "",
+          "amazingThings": [],
+          "better": []
+        }
+      },
+      "saturday":{
+        "morning": {
+          "goals": "",
+          "gratefulFor": [],
+          "todayGreat": [],
+          "affirmations": []
+        },
+        "evening": {
+          "reviewGoals": "",
+          "amazingThings": [],
+          "better": []
+        }
+      },
+      "sunday":{
+        "morning": {
+          "goals": "",
+          "gratefulFor": [],
+          "todayGreat": [],
+          "affirmations": []
+        },
+        "evening": {
+          "reviewGoals": "",
+          "amazingThings": [],
+          "better": []
+        }
+      }
+    }
+  }
+}

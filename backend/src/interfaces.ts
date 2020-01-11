@@ -4,3 +4,7 @@ export interface dateObj {
   month: number
   year: number
 }
+
+export interface IJournalEntry {
+  [key: string]: any;
+}
