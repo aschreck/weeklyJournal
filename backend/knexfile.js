@@ -1,7 +1,13 @@
 module.exports = {
   development: {
     client: 'pg',
-    connection:'postgres://localhost/weeklyJournal_dev',
+    // connection:'postgres://localhost/weeklyJournal_dev',
+    connection: {
+      database: 'weeklyjournal_dev',
+      user: 'postgres',
+      password: 'password',
+      host: 'localhost'
+    },
     migrations: {
       directory: './db/migrations'
     },
