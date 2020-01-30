@@ -1,11 +1,11 @@
-const passport = require('koa-passport')
+const passport = require('passport')
 const GoogleStrategy = require('passport-google-oauth20').Strategy
 require('dotenv').config()
 const pg = require('knex')(require('../../knexfile.js')["development"])
 
 passport.serializeUser((user: any, done: any) => {
   console.log('inside serialize user, user: ', user);
-  done(null, user[0].id)
+  done(null, user.id)
 })
 
 passport.deserializeUser((id: any, done: any) => {

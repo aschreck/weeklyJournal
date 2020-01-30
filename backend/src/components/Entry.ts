@@ -1,7 +1,18 @@
-import { dateObj, IJournalEntry } from "./interfaces";
+import { dateObj, IJournalEntry, IJournalPrompts } from "../interfaces";
 import * as fs from 'fs';
+const pg = require('knex')(require('../../knexfile.js')["development"])
 
 const journalPath = "./entries/"
+
+export const setPrompts = (prompts: IJournalPrompts, id: string) => {
+  console.log('the prompt is', prompts);
+  if (prompts.type === "weekly") {
+    console.log('inside the block');
+    pg('users').where({id: id}).update({weeklyPrompts: JSON.stringify(prompts)})
+  } else {
+    pg('users').where({id: id}).update({dailyPrompts: prompts})
+  }
+}
 
 export const startNewJournalWeek = () => {
   // need to check if entry exists

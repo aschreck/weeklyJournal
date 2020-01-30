@@ -1,20 +1,20 @@
-import * as passport from 'koa-passport';
+import * as passport from 'passport';
 
-module.exports = (router: any) => {
-  router.get('/auth/google',
+module.exports = (app: any) => {
+  app.get('/auth/google',
     passport.authenticate('google', {
       scope: ['profile', 'email']
     })
   )
 
-  router.get('/auth/google/callback', passport.authenticate('google'))
+  app.get('/auth/google/callback', passport.authenticate('google'))
 
-  router.get('/api/logout', (ctx: any) => {
+  app.get('/api/logout', (ctx: any) => {
     ctx.logout();
     ctx.body(ctx.state.user);
   })
 
-  router.get('/api/currentUser',(ctx: any) => {
-   ctx.body = ctx.state.user
+  app.get('/api/currentUser',(ctx: any) => {
+   ctx.body = ctx.state.user[0]
   })
 }

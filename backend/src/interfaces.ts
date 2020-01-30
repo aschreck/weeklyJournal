@@ -8,3 +8,8 @@ export interface dateObj {
 export interface IJournalEntry {
   [key: string]: any;
 }
+
+export interface IJournalPrompts{
+  type: string,
+  content: string[]
+}

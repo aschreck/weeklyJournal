@@ -1,6 +1,6 @@
 import { expect, assert } from 'chai';
 import 'mocha';
-import * as Entry from '../Entry'
+import * as Entry from '../components/Entry'
 
 // NOTE: because JS indexes their days from Saturday instead of Sunday, these weekday values for tests must be input from Sunday to simulate how the date object is delivered.
 describe('#getEntryIfExtant', () => {
