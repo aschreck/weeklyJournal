@@ -30,15 +30,48 @@ module.exports = (router: any)  => {
   //   await next();
   // })
 
-  // router.put('/prompts', async (req: express.Request, res: express.Response) => {
-  //   const prompts: IJournalPrompts = ctx.body
-  //   console.log('user is:', ctx.isAuthenticated());
-  //   const id: string = ctx.state.user
-  //   if(!id) {
-  //     ctx.throw= 400;
-  //   }
+  // getting req.user wrapped in an array. Need to figure out how to deal with typing for this.
+  router.get('/weeklyPrompts', async (req: any, res: express.Response) => {
+    const id = req.user[0].id
+    const prompts = await Entry.getWeeklyPrompts(id)
 
-  //   Entry.setPrompts(prompts, id)
-  //   await next()
-  // })
+    res.send({message: prompts})
+  })
+
+  router.put('/weeklyPrompts', async (req: any, res: express.Response) => {
+    const prompts: IJournalPrompts = req.body
+    const id = req.user[0].id
+    const result = await Entry.setWeeklyPrompts(prompts, id)
+
+    if (result) {
+      res.status(201)
+      res.send({message: "Created"})
+    } else {
+      res.status(500)
+      res.send({message: "Something went wrong"})
+    }
+  })
+
+  router.get('/dailyPrompts', async (req: any, res: express.Response) => {
+    const id = req.user[0].id
+
+    const prompts = await Entry.getDailyPrompts(id)
+
+    res.send({message: prompts})
+  })
+
+  router.put('/dailyPrompts', async (req: any, res: express.Response) => {
+    const prompts: IJournalPrompts = req.body
+    const id = req.user[0].id
+
+    const result = await Entry.setDailyPrompts(prompts, id)
+
+    if (result) {
+      res.status(201)
+      res.send({message: "Created"})
+    } else {
+      res.status(500)
+      res.send({message: "Something went wrong"})
+    }
+  })
 }

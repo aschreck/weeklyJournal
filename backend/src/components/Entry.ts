@@ -4,14 +4,62 @@ const pg = require('knex')(require('../../knexfile.js')["development"])
 
 const journalPath = "./entries/"
 
-export const setPrompts = (prompts: IJournalPrompts, id: string) => {
-  console.log('the prompt is', prompts);
-  if (prompts.type === "weekly") {
-    console.log('inside the block');
+export const getWeeklyPrompts = (id: string) => {
+  return new Promise((resolve, reject) => {
+    pg('users').where({id: id})
+      .then((result: any) => {
+      const prompts = result[0].weeklyPrompts
+      return resolve(prompts)
+    })
+    .catch((err: Error) => {
+      console.log("Error fetching record:", err)
+      return reject(err);
+    })
+  })
+}
+
+export const setWeeklyPrompts = (prompts: IJournalPrompts, id: string) => {
+  return new Promise((resolve, reject) => {
     pg('users').where({id: id}).update({weeklyPrompts: JSON.stringify(prompts)})
-  } else {
-    pg('users').where({id: id}).update({dailyPrompts: prompts})
-  }
+    .then((success: any) => {
+      if(success) {
+        return resolve(true)
+      }
+    })
+    .catch((err: Error) => {
+      console.log("Error updating record:", err)
+      return reject(false);
+    })
+  })
+}
+
+export const getDailyPrompts = (id: string) => {
+  return new Promise((resolve, reject) => {
+    pg('users').where({id: id})
+    .then((result: any) => {
+      const prompts = result[0].dailyPrompts
+      return resolve(prompts)
+    })
+    .catch((err: Error) => {
+      console.log("Error updating record:", err)
+      return false;
+    })
+  })
+}
+
+export const setDailyPrompts = (prompts: IJournalPrompts, id: string) => {
+  return new Promise((resolve, reject) => {
+    pg('users').where({id: id}).update({dailyPrompts: JSON.stringify(prompts)})
+    .then((success: any) => {
+      if(success) {
+        return resolve(true)
+      }
+    })
+    .catch((err: Error) => {
+      console.log("Error updating record:", err)
+      return reject(false);
+    })
+  })
 }
 
 export const startNewJournalWeek = () => {

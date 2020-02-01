@@ -1,5 +1,5 @@
-import * as passport from 'passport';
-
+import passport = require('passport');
+import express = require('express')
 module.exports = (app: any) => {
   app.get('/auth/google',
     passport.authenticate('google', {
@@ -7,14 +7,19 @@ module.exports = (app: any) => {
     })
   )
 
-  app.get('/auth/google/callback', passport.authenticate('google'))
+  app.get('/auth/google/callback',
+    passport.authenticate('google'),
+    (req: express.Request, res: express.Response) => {
+      res.redirect('/api/currentUser')
+    }
+  )
 
-  app.get('/api/logout', (ctx: any) => {
-    ctx.logout();
-    ctx.body(ctx.state.user);
+  app.get('/api/logout', (req: express.Request, res: express.Response) => {
+    req.logout();
+    res.send(req.user);
   })
 
-  app.get('/api/currentUser',(ctx: any) => {
-   ctx.body = ctx.state.user[0]
+  app.get('/api/currentUser',(req: express.Request, res: express.Response) => {
+    res.send(req.user)
   })
 }
