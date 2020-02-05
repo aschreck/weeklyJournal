@@ -30,7 +30,13 @@ export const startNewJournalWeek = async (id: string) => {
   console.log('id is: ', id);
   console.log('date is: ', date);
   try {
-    const result = await pg('entries').insert({date: buildEntryDate, user_id: id, content: JSON.stringify({})})
+    const result = await pg('entries').insert(
+      {
+        date: date,
+        user_id: id,
+        content: JSON.stringify({})
+      }
+    ).returning('*')
     console.log('result is:', result);
     return true
   } catch(err) {
