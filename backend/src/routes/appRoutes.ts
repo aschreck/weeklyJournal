@@ -1,34 +1,39 @@
 import * as Entry from '../components/Entry'
-import { IJournalPrompts } from '../interfaces';
+import { IJournalPrompts, IJournalEntry } from '../interfaces';
 import express = require('express');
 module.exports = (router: any)  => {
 
-  // router.get('/journal',(req: express.Request, res) => {
-  //   ctx.body = Entry.deliverEntryOrNull()
-  //   ctx.status = 200;
-  // })
+  router.get('/journal',async (req: any, res: express.Response) => {
+    const id = req.user[0].id
+    const result = await Entry.getJournalEntry(id)
+    res.status(200)
+    res.send(result)
+  })
 
-  // router.post('/journal', async (req: express.Request, res: express.Response)  => {
-  //   const outcome = Entry.startNewJournalWeek()
-  //   if (outcome === true) {
-  //     ctx.status = 201;
-  //   } else {
-  //     ctx.status = 400;
-  //     ctx.body = "Resource already exists!"
-  //   }
-  //   await next();
-  // })
+  router.post('/journal', async (req: any, res: express.Response)  => {
+    const id = req.user[0].id
+    const journalEntry: IJournalEntry = req.body
+    console.log(journalEntry)
+    const ok = Entry.updateJournalEntry(id, journalEntry)
+    if (ok) {
+      res.status(201)
+      res.send({message: "Resource updated"})
+    } else {
+      res.send(500)
+    }
+  })
 
-  // router.put('/journal', async (req: express.Request, res: express.Response) => {
-  //   const entry = ctx.req: express.Requestuest.body;
-  //   try {
-  //     ctx.status = 200;
-  //     Entry.writeJournalEntry(entry);
-  //   } catch (e) {
-  //     ctx.status = 500
-  //   }
-  //   await next();
-  // })
+  router.put('/journal/create', async (req: any, res: express.Response) => {
+    const id = req.user[0].id
+    console.log('id is: ', id);
+    const ok = await Entry.startNewJournalWeek(id)
+    if (ok) {
+      res.status(201)
+      res.send({message: "Resource created"})
+    } else {
+      res.send(500)
+    }
+  })
 
   // getting req.user wrapped in an array. Need to figure out how to deal with typing for this.
   router.get('/weeklyPrompts', async (req: any, res: express.Response) => {

@@ -1,8 +1,43 @@
 import { dateObj, IJournalEntry, IJournalPrompts } from "../interfaces";
 import * as fs from 'fs';
+import { kStringMaxLength } from "buffer";
 const pg = require('knex')(require('../../knexfile.js')["development"])
 
-const journalPath = "./entries/"
+export const getJournalEntry = async (id: string) => {
+  try {
+    const result = await pg('entries').where({user_id: id})
+    return result[0]
+  } catch(err) {
+    console.log(err)
+  }
+}
+export const updateJournalEntry = async (id: string, entry: IJournalEntry) => {
+  try {
+    const result = await pg('entries').where({user_id: id}).update({content: JSON.stringify(entry)})
+    console.log('result for update is: ', result);
+    return true
+  } catch(err) {
+    console.log(err)
+    return false
+  }
+}
+
+export const startNewJournalWeek = async (id: string) => {
+  const currentDate: dateObj = getDate()
+  const previousSaturdayDate = computePreviousSaturday(currentDate);
+  const date: string = buildEntryDate(previousSaturdayDate)
+  // now that I have the date string I need to create a new record in the database.
+  console.log('id is: ', id);
+  console.log('date is: ', date);
+  try {
+    const result = await pg('entries').insert({date: buildEntryDate, user_id: id, content: JSON.stringify({})})
+    console.log('result is:', result);
+    return true
+  } catch(err) {
+    console.log('Error creating Entry:', err);
+    return false
+  }
+}
 
 export const getWeeklyPrompts = (id: string) => {
   return new Promise((resolve, reject) => {
@@ -62,27 +97,6 @@ export const setDailyPrompts = (prompts: IJournalPrompts, id: string) => {
   })
 }
 
-export const startNewJournalWeek = () => {
-  // need to check if entry exists
-  const date = getDate()
-  let fileName = buildEntryFilename(computePreviousSaturday(date));
-  fileName = `./entries/${fileName}`;
-  const extant = doesFileExist(fileName);
-
-  if (extant) {
-    return false;
-  } else {
-    // create a new file with the appropriate name.
-    const templateJSON = JSON.stringify(fs.readFileSync("./entryTemplate.json", "utf8"), null, 2);
-    fs.writeFileSync(fileName, templateJSON);
-    return true;
-  }
-}
-
-const doesFileExist = (filePath: string) => {
-  return fs.existsSync(filePath);
-}
-
 export const writeJournalEntry = (entry: IJournalEntry) => {
   const date = entry.weekDate;
   const data = JSON.stringify(entry, null, 2);
@@ -91,11 +105,10 @@ export const writeJournalEntry = (entry: IJournalEntry) => {
   fs.writeFileSync(filename, data);
 }
 
-export const deliverEntryOrNull = () => {
-  const currentDate: dateObj = getDate()
-  const previousSaturdayDate = computePreviousSaturday(currentDate);
-  return getEntryIfExtant(journalPath + buildEntryFilename(previousSaturdayDate));
-}
+// export const deliverEntryOrNull = () => { const currentDate: dateObj = getDate()
+//   const previousSaturdayDate = computePreviousSaturday(currentDate);
+//   return getEntryIfExtant(journalPath + buildEntryFilename(previousSaturdayDate));
+// }
 
 const getDate = (): dateObj => {
   const d = new Date()
@@ -183,6 +196,6 @@ export const convertDayInteger = (javaScriptDay: number): number => {
   }
 }
 
-export const buildEntryFilename = (date: dateObj): string => {
-  return `${date.year}-${date.month}-${date.day}.json`
+export const buildEntryDate = (date: dateObj): string => {
+  return `${date.year}-${date.month}-${date.day}`
 }

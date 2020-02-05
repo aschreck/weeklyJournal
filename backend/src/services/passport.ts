@@ -25,7 +25,6 @@ passport.use(
     .then((existingUser: any) => {
       try{
         if (existingUser.length > 0) {
-          console.log('existing user is:', existingUser[0]);
           done(null, existingUser[0])
         } else {
           pg('users').insert(
