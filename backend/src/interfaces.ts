@@ -10,6 +10,9 @@ export interface IJournalEntry {
 }
 
 export interface IJournalPrompts{
-  type: string,
   content: string[]
+}
+export interface IDailyPrompts{
+  morning: string[],
+  evening: string[]
 }

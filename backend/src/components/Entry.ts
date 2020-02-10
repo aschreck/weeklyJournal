@@ -1,7 +1,7 @@
-import { dateObj, IJournalEntry, IJournalPrompts } from "../interfaces";
+import { dateObj, IJournalEntry, IJournalPrompts, IDailyPrompts } from "../interfaces";
 import * as fs from 'fs';
-import { kStringMaxLength } from "buffer";
 const pg = require('knex')(require('../../knexfile.js')["development"])
+const entryTemplate = require("../entryTemplate")
 
 export const getJournalEntry = async (id: string) => {
   try {
@@ -26,9 +26,12 @@ export const startNewJournalWeek = async (id: string) => {
   const currentDate: dateObj = getDate()
   const previousSaturdayDate = computePreviousSaturday(currentDate);
   const date: string = buildEntryDate(previousSaturdayDate)
-  // now that I have the date string I need to create a new record in the database.
-  console.log('id is: ', id);
-  console.log('date is: ', date);
+
+  // need to create a function that takes the existing journal template and splices in the prompts that the user has elected.
+
+  const userPrompts = await getAllUserPrompts(id)
+
+  const journalTemplate = buildEntryTemplate(entryTemplate, date, userPrompts.weeklyPrompts, userPrompts.dailyPrompts)
   try {
     const result = await pg('entries').insert(
       {
@@ -37,12 +40,18 @@ export const startNewJournalWeek = async (id: string) => {
         content: JSON.stringify({})
       }
     ).returning('*')
-    console.log('result is:', result);
     return true
   } catch(err) {
     console.log('Error creating Entry:', err);
     return false
   }
+}
+
+export const getAllUserPrompts = async (userID: string) => {
+  const user = await pg('users').where({id: userID})
+  const weeklyPrompts = user.weeklyPrompts
+  const dailyPrompts = user.dailyPrompts
+  return { weeklyPrompts, dailyPrompts }
 }
 
 export const getWeeklyPrompts = (id: string) => {
@@ -59,19 +68,27 @@ export const getWeeklyPrompts = (id: string) => {
   })
 }
 
-export const setWeeklyPrompts = (prompts: IJournalPrompts, id: string) => {
-  return new Promise((resolve, reject) => {
-    pg('users').where({id: id}).update({weeklyPrompts: JSON.stringify(prompts)})
-    .then((success: any) => {
-      if(success) {
-        return resolve(true)
-      }
-    })
-    .catch((err: Error) => {
-      console.log("Error updating record:", err)
-      return reject(false);
-    })
-  })
+export const buildEntryTemplate = (journalTemplate: IJournalEntry, date: string, weeklyPrompts: IJournalPrompts, dailyPrompts: IDailyPrompts): IJournalEntry => {
+
+  journalTemplate.weekDate = date
+  journalTemplate.weekly = weeklyPrompts.content;
+
+  for (let [key, value] of Object.entries(journalTemplate.daily)) {
+    journalTemplate.daily[key].morning = dailyPrompts.morning
+    journalTemplate.daily[key].evening = dailyPrompts.evening
+  }
+ return journalTemplate
+}
+
+export const setWeeklyPrompts = async (prompts: IJournalPrompts, id: string) => {
+
+  try {
+    const result = await pg('users').where({id: id}).update({weeklyPrompts: JSON.stringify(prompts)})
+    return (result ? true : false)
+  } catch(err) {
+    console.log("Error updating record:", err)
+    return false
+  }
 }
 
 export const getDailyPrompts = (id: string) => {
@@ -88,33 +105,15 @@ export const getDailyPrompts = (id: string) => {
   })
 }
 
-export const setDailyPrompts = (prompts: IJournalPrompts, id: string) => {
-  return new Promise((resolve, reject) => {
-    pg('users').where({id: id}).update({dailyPrompts: JSON.stringify(prompts)})
-    .then((success: any) => {
-      if(success) {
-        return resolve(true)
-      }
-    })
-    .catch((err: Error) => {
-      console.log("Error updating record:", err)
-      return reject(false);
-    })
-  })
+export const setDailyPrompts = async (prompts: IJournalPrompts, id: string) => {
+  try {
+    const result = await pg('users').where({id: id}).update({dailyPrompts: JSON.stringify(prompts)})
+    return (result ? true : false)
+  } catch(err) {
+    console.log("Error updating record:", err)
+    return false
+  }
 }
-
-export const writeJournalEntry = (entry: IJournalEntry) => {
-  const date = entry.weekDate;
-  const data = JSON.stringify(entry, null, 2);
-  //build the filename
-  const filename = `./entries/${date}.json`;
-  fs.writeFileSync(filename, data);
-}
-
-// export const deliverEntryOrNull = () => { const currentDate: dateObj = getDate()
-//   const previousSaturdayDate = computePreviousSaturday(currentDate);
-//   return getEntryIfExtant(journalPath + buildEntryFilename(previousSaturdayDate));
-// }
 
 const getDate = (): dateObj => {
   const d = new Date()

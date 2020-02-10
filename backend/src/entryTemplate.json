@@ -1,81 +1,21 @@
 {
   "weekDate": "",
   "weekly": {
-    "review": {
-      "content": ""
     },
-    "gratitude": {
-      "content": ""
+  "daily": {
+    "saturday":{
     },
-    "goals": {
-      "content": ""
+    "sunday":{
     },
-    "projects": {
-      "content": ""
+    "monday":{
     },
-    "health": {
-      "contents": ""
+    "tuesday":{
     },
-    "thoughts": {
-      "contents": ""
+    "wednesday":{
     },
-    "daily": {
-      "monday":{
-        "setGoals": {
-          "content": ""
-        },
-        "reviewGoals": {
-          "content": ""
-        }
-      },
-      "tuesday":{
-        "setGoals": {
-          "content": ""
-        },
-        "reviewGoals": {
-          "content": ""
-        }
-      },
-      "wednesday":{
-        "setGoals": {
-          "content": ""
-        },
-        "reviewGoals": {
-          "content": ""
-        }
-      },
-      "thursday":{
-        "setGoals": {
-          "content": ""
-        },
-        "reviewGoals": {
-          "content": ""
-        }
-      },
-      "friday":{
-        "setGoals": {
-          "content": ""
-        },
-        "reviewGoals": {
-          "content": ""
-        }
-      },
-      "saturday":{
-        "setGoals": {
-          "content": ""
-        },
-        "reviewGoals": {
-          "content": ""
-        }
-      },
-      "sunday":{
-        "setGoals": {
-          "content": ""
-        },
-        "reviewGoals": {
-          "content": ""
-        }
-      }
+    "thursday":{
+    },
+    "friday":{
     }
   }
 }

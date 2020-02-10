@@ -1,22 +1,11 @@
 import { expect, assert } from 'chai';
 import 'mocha';
 import * as Entry from '../components/Entry'
+import { IJournalPrompts, IDailyPrompts } from '../interfaces';
+
+const entryTemplate = require("../entryTemplate")
 
 // NOTE: because JS indexes their days from Saturday instead of Sunday, these weekday values for tests must be input from Sunday to simulate how the date object is delivered.
-describe('#getEntryIfExtant', () => {
-  it("should return journal data for a given date if it exists", () => {
-    const testEntryFilename = "./src/test/2019-12-26.json"
-    let result = Entry.getEntryIfExtant(testEntryFilename)
-    assert.hasAllKeys(result, ['weekDate', 'weekly', 'daily'])
-  })
-
-  it("should return null when no entry is present", () => {
-    const testEntryFilename = "./test/2018-12-26.json"
-    let result = Entry.getEntryIfExtant(testEntryFilename)
-    expect(result).to.equal(null);
-  })
-})
-
 describe('#computePreviousSaturday', () => {
   it('should work with a saturday in the same month', () => {
     const date = {
@@ -85,14 +74,25 @@ describe('#convertDayInteger', () => {
   })
 })
 
-describe('#buildEntryFilename', () => {
-  it('should properly build filenames from date objects', () => {
-    const date = {
-      weekDay: 0,
-      day: 4,
-      month: 1,
-      year: 2020,
+describe('#buildEntryTemplate', () => {
+  it('should build a template with a user\'s chosen prompts', () => {
+    const dailyPrompts: IDailyPrompts = {
+      "morning": ["What am I grateful for today?", "What accomplishment would make today great?"],
+      "evening": ["What went well today?", "What could have gone better?"]
     }
-    expect(Entry.buildEntryFilename(date)).to.equal("2020-1-4.json");
+
+    const weeklyPrompts: IJournalPrompts = {
+      "content": ["Review from last week", "Goal Setting", "Celebrations"]
+    }
+
+    const result = Entry.buildEntryTemplate(entryTemplate, "2020-2-8", weeklyPrompts, dailyPrompts)
+    expect(result.weekDate).to.equal("2020-2-8")
+    expect(result.weekly.includes("Review from last week")).to.be.true
+    expect(result.weekly.includes("Goal Setting")).to.be.true
+    expect(result.weekly.includes("Celebrations")).to.be.true
+    expect(result.daily.monday.morning.includes("What am I grateful for today?")).to.be.true
+    expect(result.daily.tuesday.morning.includes("What accomplishment would make today great?")).to.be.true
+    expect(result.daily.saturday.evening.includes("What could have gone better?")).to.be.true
+    expect(result.daily.sunday.evening.includes("What could have gone better?")).to.be.true
   })
 })
