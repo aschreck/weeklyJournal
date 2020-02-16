@@ -10,7 +10,8 @@ class WelcomeScreen extends React.Component {
     return (
       <div className='ui segment'>
         <h1>Welcome to weeklyJournal!</h1>
-        <button onClick={this.state.initializeFunction} className='ui button'>Start Journaling</button>
+        <button onClick={this.state.initializeFunction} className='ui button'>Log in with google</button>
+        <a href="/auth/google">Log in with google</a>
       </div>
     )
   }
