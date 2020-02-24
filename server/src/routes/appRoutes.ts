@@ -21,14 +21,25 @@ const dailyPromptSchema = {
 };
 
 module.exports = (router: any) => {
-  router.get("/journal", async (req: any, res: express.Response) => {
+  router.get("/api/currentJournal", async (req: any, res: express.Response) => {
+    const id = req.user[0].id;
+    console.log("id is:", id);
+    const result = await Entry.fetchCurrentJournal(id);
+    if (result.length > 0) {
+      res.send(result);
+    } else {
+      res.status(404).send("Entry not found");
+    }
+  });
+
+  router.get("/api/journal", async (req: any, res: express.Response) => {
     const id = req.user[0].id;
     const result = await Entry.getJournalEntry(id);
     res.status(200);
     res.send(result);
   });
 
-  router.put("/journal", async (req: any, res: express.Response) => {
+  router.put("/api/journal", async (req: any, res: express.Response) => {
     const id = req.user[0].id;
     const journalEntry: IJournalEntry = req.body;
     console.log(journalEntry);
@@ -41,7 +52,7 @@ module.exports = (router: any) => {
     }
   });
 
-  router.post("/journal", async (req: any, res: express.Response) => {
+  router.post("/api/journal", async (req: any, res: express.Response) => {
     const id = req.user[0].id;
     console.log("id is: ", id);
     const ok = await Entry.startNewJournalWeek(id);
@@ -53,15 +64,14 @@ module.exports = (router: any) => {
     }
   });
 
-  // getting req.user wrapped in an array. Need to figure out how to deal with typing for this.
-  router.get("/weeklyPrompts", async (req: any, res: express.Response) => {
+  router.get("/api/weeklyPrompts", async (req: any, res: express.Response) => {
     const id = req.user[0].id;
     const prompts = await Entry.getWeeklyPrompts(id);
 
     res.send({ message: prompts });
   });
 
-  router.post("/weeklyPrompts", async (req: any, res: express.Response) => {
+  router.post("/api/weeklyPrompts", async (req: any, res: express.Response) => {
     const prompts: IJournalPrompts = req.body;
     const id = req.user[0].id;
 
@@ -84,7 +94,7 @@ module.exports = (router: any) => {
     }
   });
 
-  router.get("/dailyPrompts", async (req: any, res: express.Response) => {
+  router.get("/api/dailyPrompts", async (req: any, res: express.Response) => {
     const id = req.user[0].id;
 
     const prompts = await Entry.getDailyPrompts(id);
@@ -92,7 +102,7 @@ module.exports = (router: any) => {
     res.send({ message: prompts });
   });
 
-  router.post("/dailyPrompts", async (req: any, res: express.Response) => {
+  router.post("/api/dailyPrompts", async (req: any, res: express.Response) => {
     const prompts: IJournalPrompts = req.body;
     const id = req.user[0].id;
 

@@ -30,14 +30,28 @@ export const updateJournalEntry = async (id: string, entry: IJournalEntry) => {
   }
 };
 
+export const fetchCurrentJournal = async (id: string) => {
+  const rightNow = getDate();
+  const targetDate = computePreviousSaturday(rightNow);
+  console.log("the date is:", targetDate)
+
+  // lookup the journal for current date.
+  const result = await pg("entries").where({
+    user_id: id,
+    date: targetDate
+  });
+
+  return result;
+  // based on whether the result has a value or not,
+};
+
 export const startNewJournalWeek = async (id: string) => {
   const currentDate: dateObj = getDate();
   const previousSaturdayDate = computePreviousSaturday(currentDate);
   const date: string = buildEntryDate(previousSaturdayDate);
 
-  // need to create a function that takes the existing journal template and splices in the prompts that the user has elected.
-
   const userPrompts = await getAllUserPrompts(id);
+  console.log("userpropmts are:", userPrompts)
 
   const journalTemplate = buildEntryTemplate(
     entryTemplate,
@@ -50,7 +64,7 @@ export const startNewJournalWeek = async (id: string) => {
       .insert({
         date: date,
         user_id: id,
-        content: JSON.stringify({})
+        content: JSON.stringify(journalTemplate)
       })
       .returning("*");
     return true;
@@ -61,7 +75,8 @@ export const startNewJournalWeek = async (id: string) => {
 };
 
 export const getAllUserPrompts = async (userID: string) => {
-  const user = await pg("users").where({ id: userID });
+  let user = await pg("users").where({ id: userID });
+  user = user[0]
   const weeklyPrompts = user.weeklyPrompts;
   const dailyPrompts = user.dailyPrompts;
   return { weeklyPrompts, dailyPrompts };
@@ -88,6 +103,9 @@ export const buildEntryTemplate = (
   weeklyPrompts: IJournalPrompts,
   dailyPrompts: IDailyPrompts
 ): IJournalEntry => {
+  console.log("Journaltemplate:", journalTemplate);
+  console.log("WeeklyPrompts:", weeklyPrompts);
+  console.log("dailyPrompts:", dailyPrompts);
   journalTemplate.weekDate = date;
   journalTemplate.weekly = weeklyPrompts.content;
 
@@ -140,7 +158,7 @@ export const setDailyPrompts = async (prompts: IJournalPrompts, id: string) => {
   }
 };
 
-const getDate = (): dateObj => {
+export const getDate = (): dateObj => {
   const d = new Date();
   const date: dateObj = {
     weekDay: d.getDay(),
