@@ -13,11 +13,12 @@ const weeklyPromptSchema = {
 };
 
 const dailyPromptSchema = {
-  required: ["prompts"],
-  properties: {
-    prompts: { type: "array" }
-  },
-  additionalProperties: false
+//   required: ["prompts"],
+//   properties: {
+//     morning: { type: "array" },
+//     evening: { type: "array" }
+//   },
+//   additionalProperties: false
 };
 
 module.exports = (router: any) => {
@@ -105,9 +106,11 @@ module.exports = (router: any) => {
   router.post("/api/dailyPrompts", async (req: any, res: express.Response) => {
     const prompts: IJournalPrompts = req.body;
     const id = req.user[0].id;
+    console.log("daily prompt post ID is: ", id)
 
     const validate = ajv.compile(dailyPromptSchema);
     const valid = validate(prompts);
+    console.log("Is the schema valid?", valid)
 
     if (!valid) {
       res.status(400);
